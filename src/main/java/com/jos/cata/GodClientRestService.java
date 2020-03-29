@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GodClientRestService {
+	
+	private GodClientRestService() {
+	    throw new IllegalStateException("Utility class");
+	  }
 
 	public static List<String> filterGods(List<String> gods) {
 		

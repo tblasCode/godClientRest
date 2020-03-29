@@ -18,11 +18,9 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 
 public class RestGodClientTests {
 	WireMockServer wireMockServer;
-	GodClientRestService godClientRestService;
 	
 	@BeforeEach
 	public void setup () {
-		godClientRestService = new GodClientRestService();
 		wireMockServer = new WireMockServer(8989);
 		wireMockServer.start();
 		setupStub();
@@ -66,11 +64,11 @@ public class RestGodClientTests {
             .and().extract().body().jsonPath().getList(".", String.class);
 		
 		
-		List<String> godsFilterFirstLetterN = godClientRestService.filterGods(greekGods);
+		List<String> godsFilterFirstLetterN = GodClientRestService.filterGods(greekGods);
 		assertTrue(godsFilterFirstLetterN.size() < greekGods.size());
-		
 
-		Integer nameDecimal = godClientRestService.convertNameToDecimal(greekGods.get(0));
+		String nameDecimal = GodClientRestService.convertNameToDecimal(greekGods.get(0));
+		System.out.println(nameDecimal);
 		
 	}
 }
