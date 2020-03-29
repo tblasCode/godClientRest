@@ -9,4 +9,9 @@ public class GodClientRestService {
 		
 		return gods.stream().filter(data -> data.charAt(0) == 'n').collect(Collectors.toList());
 	}
+	
+	public static Integer convertNameToDecimal(String godName) {
+		return godName.chars().reduce(0, Integer::sum);
+	}
+	
 }
