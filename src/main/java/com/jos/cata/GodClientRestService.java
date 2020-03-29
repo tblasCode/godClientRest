@@ -10,8 +10,8 @@ public class GodClientRestService {
 		return gods.stream().filter(data -> data.charAt(0) == 'n').collect(Collectors.toList());
 	}
 	
-	public static Integer convertNameToDecimal(String godName) {
-		return godName.chars().sum();
+	public static String convertNameToDecimal(String godName) {
+		return godName.chars().mapToObj(d -> Integer.toString(d)).collect(Collectors.joining());
 	}
 	
 }
