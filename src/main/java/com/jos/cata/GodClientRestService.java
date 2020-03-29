@@ -11,7 +11,7 @@ public class GodClientRestService {
 	}
 	
 	public static Integer convertNameToDecimal(String godName) {
-		return godName.chars().reduce(0, Integer::sum);
+		return godName.chars().sum();
 	}
 	
 }
