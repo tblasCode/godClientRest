@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -68,9 +69,10 @@ public class RestGodClientTests {
 		assertTrue(godsFilterFirstLetterN.size() < greekGods.size());
 
 		String nameDecimal = GodClientRestService.convertNameToDecimal(greekGods.get(0));
-		System.out.println(nameDecimal);
+		assertEquals(nameDecimal, "090101117115");
 		
-		GodClientRestService.sumDecimalName(nameDecimal);
+		int sum = GodClientRestService.sumDecimalName(nameDecimal);
 		
+		assertEquals(sum, 423);
 	}
 }
