@@ -1,0 +1,63 @@
+package com.jos.cata;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import io.restassured.response.Response;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static io.restassured.RestAssured.given;
+
+public class RestGodClientTests {
+	WireMockServer wireMockServer;
+
+	@BeforeEach
+	public void setup () {
+		wireMockServer = new WireMockServer(8989);
+		wireMockServer.start();
+		setupStub();
+	}
+
+	@AfterEach
+	public void teardown () {
+		wireMockServer.stop();
+	}
+
+	public void setupStub() {
+		wireMockServer.stubFor(get(urlEqualTo("/gods/?nationality=greek"))
+				.willReturn(aResponse().withHeader("Content-Type", "text/plain")
+						.withStatus(200)
+						.withBodyFile("json/godsGreek.json")));
+
+		wireMockServer.stubFor(get(urlEqualTo("/gods/?nationality=roman"))
+				.willReturn(aResponse().withHeader("Content-Type", "text/plain")
+						.withStatus(200)
+						.withBodyFile("json/godsRoman.json")));
+		wireMockServer.stubFor(get(urlEqualTo("/gods/?nationality=nordic"))
+				.willReturn(aResponse().withHeader("Content-Type", "text/plain")
+						.withStatus(200)
+						.withBodyFile("json/godsNordic.json")));
+
+
+	}
+
+
+	@Test
+	public void whenCall_and_retrieve_all_API_info() {
+        given()
+            .baseUri("http://localhost:8989/gods")
+            .and()
+            .queryParam("nationality", "greek")
+        .when()
+            .get("/")
+        .then()
+            .log().all()
+            .and().assertThat().statusCode(is(equalTo(200)));
+	}
+}
