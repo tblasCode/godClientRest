@@ -1,24 +1,27 @@
 package com.jos.cata;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import io.restassured.response.Response;
-
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
-import org.junit.Assert;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static io.restassured.RestAssured.given;
+import com.github.tomakehurst.wiremock.WireMockServer;
 
 public class RestGodClientTests {
 	WireMockServer wireMockServer;
-
+	GodClientRestService godClientRestService;
+	
 	@BeforeEach
 	public void setup () {
+		godClientRestService = new GodClientRestService();
 		wireMockServer = new WireMockServer(8989);
 		wireMockServer.start();
 		setupStub();
@@ -50,7 +53,7 @@ public class RestGodClientTests {
 
 	@Test
 	public void whenCall_and_retrieve_all_API_info() {
-        given()
+		List<String> greekGods = given()
             .baseUri("http://localhost:8989/gods")
             .and()
             .queryParam("nationality", "greek")
@@ -58,6 +61,11 @@ public class RestGodClientTests {
             .get("/")
         .then()
             .log().all()
-            .and().assertThat().statusCode(is(equalTo(200)));
+            .and().assertThat().statusCode(is(equalTo(200)))
+            .and().extract().body().jsonPath().getList(".", String.class);
+		
+		
+		List<String> godsFilterFirstLetterN = godClientRestService.filterGods(greekGods);
+		
 	}
 }
