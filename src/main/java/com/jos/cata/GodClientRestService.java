@@ -11,8 +11,7 @@ public class GodClientRestService {
 	  }
 
 	public static List<String> filterGods(List<String> gods) {
-		
-		return gods.stream().filter(data -> data.charAt(0) == 'n').collect(Collectors.toList());
+		return gods.stream().filter(data -> data.charAt(0) == 'N').collect(Collectors.toList());
 	}
 	
 	public static String convertNameToDecimal(String godName) {
