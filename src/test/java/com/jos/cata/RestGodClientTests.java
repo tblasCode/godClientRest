@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,15 +65,45 @@ public class RestGodClientTests {
             .and().assertThat().statusCode(is(equalTo(200)))
             .and().extract().body().jsonPath().getList(".", String.class);
 		
+		List<String> romanGods = given()
+	            .baseUri("http://localhost:8989/gods")
+	            .and()
+	            .queryParam("nationality", "roman")
+	        .when()
+	            .get("/")
+	        .then()
+	            .log().all()
+	            .and().assertThat().statusCode(is(equalTo(200)))
+	            .and().extract().body().jsonPath().getList(".", String.class);
 		
-		List<String> godsFilterFirstLetterN = GodClientRestService.filterGods(greekGods);
-		assertTrue(godsFilterFirstLetterN.size() < greekGods.size());
+		List<String> nordicGods = given()
+	            .baseUri("http://localhost:8989/gods")
+	            .and()
+	            .queryParam("nationality", "nordic")
+	        .when()
+	            .get("/")
+	        .then()
+	            .log().all()
+	            .and().assertThat().statusCode(is(equalTo(200)))
+	            .and().extract().body().jsonPath().getList(".", String.class);
+		
+		
+		List<String> godsGreekFilterFirstLetterN = GodClientRestService.filterGods(greekGods);
+		assertEquals(2,godsGreekFilterFirstLetterN.size());
+		
+		List<String> godsRomanFilterFirstLetterN = GodClientRestService.filterGods(romanGods);
+		assertEquals(1,godsRomanFilterFirstLetterN.size());
+		
+		List<String> godsNordicFilterFirstLetterN = GodClientRestService.filterGods(nordicGods);
+		assertEquals(1,godsNordicFilterFirstLetterN.size());
 
-		String nameDecimal = GodClientRestService.convertNameToDecimal(greekGods.get(0));
-		assertEquals(nameDecimal, "090101117115");
 		
-		int sum = GodClientRestService.sumDecimalName(nameDecimal);
-		
-		assertEquals(sum, 423);
+		int resultGreek = godsGreekFilterFirstLetterN.stream().flatMapToInt(data -> IntStream.of(GodClientRestService.sumDecimalName(GodClientRestService.convertNameToDecimal(data)))).sum();
+		assertEquals(1115, resultGreek);
+		int resultRoman= godsRomanFilterFirstLetterN.stream().flatMapToInt(data -> IntStream.of(GodClientRestService.sumDecimalName(GodClientRestService.convertNameToDecimal(data)))).sum();
+		assertEquals(634, resultRoman);
+		int resultNordic = godsNordicFilterFirstLetterN.stream().flatMapToInt(data -> IntStream.of(GodClientRestService.sumDecimalName(GodClientRestService.convertNameToDecimal(data)))).sum();
+		assertEquals(509, resultNordic);
+
 	}
 }
