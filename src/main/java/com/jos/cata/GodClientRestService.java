@@ -11,7 +11,7 @@ public class GodClientRestService {
 	}
 	
 	public static String convertNameToDecimal(String godName) {
-		return godName.chars().mapToObj(d -> Integer.toString(d)).collect(Collectors.joining());
+		return godName.chars().mapToObj(Integer::toString).collect(Collectors.joining());
 	}
 	
 }
