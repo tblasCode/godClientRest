@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -66,6 +67,8 @@ public class RestGodClientTests {
 		
 		
 		List<String> godsFilterFirstLetterN = godClientRestService.filterGods(greekGods);
+		
+		assertTrue(godsFilterFirstLetterN.size() < greekGods.size());
 		
 	}
 }
