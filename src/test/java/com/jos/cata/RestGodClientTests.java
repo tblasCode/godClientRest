@@ -67,8 +67,10 @@ public class RestGodClientTests {
 		
 		
 		List<String> godsFilterFirstLetterN = godClientRestService.filterGods(greekGods);
-		
 		assertTrue(godsFilterFirstLetterN.size() < greekGods.size());
+		
+
+		Integer nameDecimal = godClientRestService.convertNameToDecimal(greekGods.get(0));
 		
 	}
 }
