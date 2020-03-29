@@ -70,5 +70,7 @@ public class RestGodClientTests {
 		String nameDecimal = GodClientRestService.convertNameToDecimal(greekGods.get(0));
 		System.out.println(nameDecimal);
 		
+		GodClientRestService.sumDecimalName(nameDecimal);
+		
 	}
 }
